@@ -2,7 +2,7 @@
 This tool will daily crawl https://arxiv.org and use LLMs to summarize them.
 
 # How to use
-This repo will daily crawl arXiv papers about **cs.CV and cs.CL**, and use **DeepSeek** to summarize the papers in **Chinese**.
+This repo will daily crawl arXiv papers about **cs.CV, cs.GR and cs.CL**, and use **DeepSeek** to summarize the papers in **Chinese**.
 If you wish to crawl other arXiv categories, use other LLMs or other language, please follow the bellow instructions.
 Otherwise, you can directly use this repo. Please star it if you like :)
 
@@ -24,6 +24,8 @@ By default, this action will automatically run every day
 You can modify it in `.github/workflows/run.yml`
 
 # Content
+[2025-04-18](data/2025-04-18.md)
+
 [2025-04-17](data/2025-04-17.md)
 
 [2025-04-16](data/2025-04-16.md)
