@@ -24,6 +24,8 @@ By default, this action will automatically run every day
 You can modify it in `.github/workflows/run.yml`
 
 # Content
+[2025-04-28](data/2025-04-28.md)
+
 [2025-04-27](data/2025-04-27.md)
 
 [2025-04-26](data/2025-04-26.md)
@@ -112,4 +114,3 @@ You can modify it in `.github/workflows/run.yml`
 # Star history
 
 [![Star History Chart](https://api.star-history.com/svg?repos=dw-dengwei/daily-arXiv-ai-enhanced&type=Date)](https://www.star-history.com/#dw-dengwei/daily-arXiv-ai-enhanced&Date)
-
