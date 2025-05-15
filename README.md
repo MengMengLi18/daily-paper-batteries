@@ -22,8 +22,11 @@ Otherwise, you can directly use this repo. Please star it if you like :)
 8. You can manually click **Run workflow** to test if it works well (it may takes about one hour). 
 By default, this action will automatically run every day
 You can modify it in `.github/workflows/run.yml`
+9. If you wish to modify the content in `README.md`, do not directly edit README.md. You should edit `template.md`.
 
 # Content
+[2025-05-15](data/2025-05-15.md)
+
 [2025-05-14](data/2025-05-14.md)
 
 [2025-05-13](data/2025-05-13.md)
