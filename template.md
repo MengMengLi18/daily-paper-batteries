@@ -6,9 +6,6 @@ This repo will daily crawl arXiv papers about **cs.CV, cs.GR and cs.CL**, and us
 If you wish to crawl other arXiv categories, use other LLMs or other languages, please follow the bellow instructions.
 Otherwise, you can directly use this repo. Please star it if you like :)
 
-# To-do list
-- [ ]  Replace markdown with GitHub pages front-end.
-
 **Instructions:**
 1. Fork this repo to your own account
 2. Go to: your-own-repo -> Settings -> Secrets and variables -> Actions
@@ -26,6 +23,9 @@ Otherwise, you can directly use this repo. Please star it if you like :)
 By default, this action will automatically run every day
 You can modify it in `.github/workflows/run.yml`
 9. If you wish to modify the content in `README.md`, do not directly edit README.md. You should edit `template.md`.
+
+# To-do list
+- [ ]  Replace markdown with GitHub pages front-end.
 
 # Content
 {readme_content}
