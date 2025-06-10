@@ -78,8 +78,14 @@ async function fetchAvailableDates() {
     const files = text.trim().split('\n');
 
     const dateRegex = /(\d{4}-\d{2}-\d{2})_AI_enhanced_Chinese\.jsonl/;
-    const matches = [...files.matchAll(dateRegex)];
-    availableDates = [...new Set(matches.map(match => match[1]))];
+    const dates = [];
+    files.forEach(file => {
+      const match = file.match(dateRegex);
+      if (match && match[1]) {
+        dates.push(match[1]);
+      }
+    });
+    availableDates = [...new Set(dates)];
     availableDates.sort((a, b) => new Date(b) - new Date(a));
 
     initDatePicker(); // Assuming this function uses availableDates
