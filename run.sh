@@ -10,3 +10,5 @@ python convert.py --data ../data/${today}_AI_enhanced_${LANGUAGE}.jsonl
 
 cd ..
 python update_readme.py
+
+ls data/*.jsonl | sed 's|data/||' > assets/file-list.json

@@ -69,18 +69,25 @@ function initEventListeners() {
 
 async function fetchAvailableDates() {
   try {
-    const response = await fetch('daily-arXiv-ai-enhanced/data/');
-    const text = await response.text();
-    
-    const dateRegex = /(\d{4}-\d{2}-\d{2})_AI_enhanced_Chinese\.jsonl/g;
-    const matches = [...text.matchAll(dateRegex)];
-    
-    availableDates = [...new Set(matches.map(match => match[1]))];
-    
+    const response = await fetch('assets/file-list.json');
+    if (!response.ok) {
+      console.error('Error fetching file list:', response.status);
+      return [];
+    }
+    const files = await response.json();
+
+    const dateRegex = /(\d{4}-\d{2}-\d{2})_AI_enhanced_Chinese\.jsonl/;
+    const availableDates = files
+      .map(file => {
+        const match = file.match(dateRegex);
+        return match ? match[1] : null;
+      })
+      .filter(date => date !== null);
+
     availableDates.sort((a, b) => new Date(b) - new Date(a));
-    
-    initDatePicker();
-    
+
+    initDatePicker(); // Assuming this function uses availableDates
+
     return availableDates;
   } catch (error) {
     console.error('获取可用日期失败:', error);
