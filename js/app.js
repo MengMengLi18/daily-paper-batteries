@@ -48,7 +48,7 @@ async function fetchGitHubStats() {
 function initEventListeners() {
   document.getElementById('calendarButton').addEventListener('click', toggleDatePicker);
   
-  document.getElementById('toggleView').addEventListener('click', toggleView);
+  // document.getElementById('toggleView').addEventListener('click', toggleView);
   
   document.getElementById('closeModal').addEventListener('click', closeModal);
   
