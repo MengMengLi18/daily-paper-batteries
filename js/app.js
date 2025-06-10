@@ -69,7 +69,7 @@ function initEventListeners() {
 
 async function fetchAvailableDates() {
   try {
-    const response = await fetch('/data/');
+    const response = await fetch('data/');
     const text = await response.text();
     
     const dateRegex = /(\d{4}-\d{2}-\d{2})_AI_enhanced_Chinese\.jsonl/g;
@@ -155,7 +155,7 @@ function toggleRangeMode() {
 
 async function listDataFiles() {
   try {
-    const response = await fetch('/data/');
+    const response = await fetch('data/');
     const html = await response.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
@@ -192,7 +192,7 @@ async function loadPapersByDate(date) {
       updatedPreference.forEach(category => defaultCategoryPreference.push(category));
     }
     
-    const response = await fetch(`/data/${date}_AI_enhanced_Chinese.jsonl`);
+    const response = await fetch(`data/${date}_AI_enhanced_Chinese.jsonl`);
     const text = await response.text();
     
     paperData = parseJsonlData(text, date);
@@ -485,7 +485,7 @@ async function loadPapersByDateRange(startDate, endDate) {
     const allPaperData = {};
     
     for (const date of validDatesInRange) {
-      const response = await fetch(`/data/${date}_AI_enhanced_Chinese.jsonl`);
+      const response = await fetch(`data/${date}_AI_enhanced_Chinese.jsonl`);
       const text = await response.text();
       const dataPapers = parseJsonlData(text, date);
       
