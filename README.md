@@ -28,6 +28,7 @@ You can modify it in `.github/workflows/run.yml`
 
 # To-do list
 - [x] Replace markdown with GitHub pages front-end.
+- [x] Highlight matched authors and keywords in filtered articles.
 - [ ] Update instructions for fork users about how to use github pages.
 
 # Content
