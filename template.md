@@ -1,10 +1,12 @@
 # About
 This tool will daily crawl https://arxiv.org and use LLMs to summarize them.
 
+See in: https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/
+
 # How to use
 This repo will daily crawl arXiv papers about **cs.CV, cs.GR and cs.CL**, and use **DeepSeek** to summarize the papers in **Chinese**.
 If you wish to crawl other arXiv categories, use other LLMs or other languages, please follow the bellow instructions.
-Otherwise, you can directly use this repo. Please star it if you like :)
+Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/ . Please star it if you like :)
 
 **Instructions:**
 1. Fork this repo to your own account
@@ -25,7 +27,8 @@ You can modify it in `.github/workflows/run.yml`
 9. If you wish to modify the content in `README.md`, do not directly edit README.md. You should edit `template.md`.
 
 # To-do list
-- [ ]  Replace markdown with GitHub pages front-end.
+- [x] Replace markdown with GitHub pages front-end.
+- [ ] Update instructions for fork users about how to use github pages.
 
 # Content
 {readme_content}
