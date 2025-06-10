@@ -11,3 +11,4 @@ wheels/
 ai/.env
 test/*
 .idea/
+.cursorrules
