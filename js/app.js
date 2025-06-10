@@ -69,12 +69,13 @@ function initEventListeners() {
 
 async function fetchAvailableDates() {
   try {
-    const response = await fetch('assets/file-list.json');
+    const response = await fetch('assets/file-list.txt');
     if (!response.ok) {
       console.error('Error fetching file list:', response.status);
       return [];
     }
-    const files = await response.json();
+    const text = await response.text();
+    const files = text.trim().split('\n');
 
     const dateRegex = /(\d{4}-\d{2}-\d{2})_AI_enhanced_Chinese\.jsonl/;
     const availableDates = files
@@ -159,21 +160,6 @@ function toggleRangeMode() {
     flatpickrInstance.set('mode', isRangeMode ? 'range' : 'single');
   }
 }
-
-async function listDataFiles() {
-  try {
-    const response = await fetch('daily-arXiv-ai-enhanced/data/');
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const links = Array.from(doc.querySelectorAll('a'));
-    return links.map(link => link.href.split('/').pop()).filter(Boolean);
-  } catch (error) {
-    console.error('列出数据文件失败:', error);
-    return [];
-  }
-}
-
 
 async function loadPapersByDate(date) {
   currentDate = date;
