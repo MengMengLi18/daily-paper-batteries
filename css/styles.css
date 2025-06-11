@@ -19,6 +19,10 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --transition: all 0.2s ease;
+  --match-highlight: rgba(255, 215, 0, 0.08);
+  --gold-color: #ffd700;
+  --gold-dark: #d4af37;
+  --gold-gradient: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
 }
 
 * {
@@ -1574,45 +1578,47 @@ footer {
 
 /* 高亮样式 */
 .keyword-highlight {
-  background-color: rgba(102, 126, 234, 0.15);
+  background-color: rgba(255, 215, 0, 0.15);
   border-radius: 3px;
   padding: 0 2px;
-  font-weight: 500;
-  color: var(--primary-color);
+  font-weight: inherit;
+  color: inherit;
   position: relative;
   display: inline-block;
-  box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.3);
   transition: all 0.2s ease;
 }
 
 .keyword-highlight:hover {
-  background-color: rgba(102, 126, 234, 0.25);
-  box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.5);
+  background-color: rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.4);
 }
 
 .author-highlight {
-  background-color: rgba(167, 139, 250, 0.15);
+  background-color: rgba(255, 215, 0, 0.12);
   border-radius: 3px;
   padding: 0 2px;
-  font-weight: 500;
-  color: var(--secondary-color);
+  font-weight: inherit;
+  color: inherit;
   position: relative;
   display: inline-block;
-  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.3);
+  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.25);
   transition: all 0.2s ease;
 }
 
 .author-highlight:hover {
-  background-color: rgba(167, 139, 250, 0.25);
-  box-shadow: 0 0 0 1px rgba(167, 139, 250, 0.5);
+  background-color: rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.35);
 }
 
-/* 在移动端优化高亮样式 */
-@media (max-width: 768px) {
-  .keyword-highlight, .author-highlight {
-    padding: 0 1px;
-    border-radius: 2px;
-  }
+.paper-modal-body .highlight-info .keyword-sample {
+  background-color: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.paper-modal-body .highlight-info .author-sample {
+  background-color: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.25);
 }
 
 /* 添加一个高亮动画效果 */
@@ -1661,12 +1667,243 @@ footer {
   border-radius: 2px;
 }
 
-.paper-modal-body .highlight-info .keyword-sample {
-  background-color: rgba(102, 126, 234, 0.15);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+/* 匹配论文卡片的高亮样式 */
+.paper-card.matched-paper {
+  box-shadow: 0 0 0 2px var(--gold-color), var(--shadow-md);
+  background-color: var(--match-highlight);
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
-.paper-modal-body .highlight-info .author-sample {
-  background-color: rgba(167, 139, 250, 0.15);
-  border: 1px solid rgba(167, 139, 250, 0.3);
+.paper-card.matched-paper:hover {
+  box-shadow: 0 0 0 2px var(--gold-color), var(--shadow-lg);
+  transform: translateY(-3px);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+/* 移除这个 ::after 星星，只使用 .match-badge */
+.paper-card.matched-paper::after {
+  display: none;
+}
+
+/* 保留原始的关键帧动画，因为其他地方可能会用到 */
+@keyframes goldPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* 为匹配论文添加列表视图的特殊样式 */
+.list-view .paper-card.matched-paper {
+  border-left: 4px solid var(--gold-color);
+}
+
+/* 优化移动端显示效果 */
+@media (max-width: 768px) {
+  .paper-card.matched-paper::after {
+    top: -4px;
+    right: -4px;
+    width: 20px;
+    height: 20px;
+    background-size: 12px 12px;
+  }
+}
+
+/* 匹配论文在详情页中的样式 */
+.matched-paper-details {
+  position: relative;
+  border-left: 4px solid var(--gold-color);
+  padding-left: 16px;
+  background-color: var(--match-highlight);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: inset 0 0 0 1px rgba(255, 215, 0, 0.3);
+}
+
+.match-indicator {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  background: var(--gold-gradient);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px 4px 28px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(212, 175, 55, 0.4);
+  z-index: 1;
+  letter-spacing: 0.5px;
+  animation: fadeIn 0.5s ease-out;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 8px center;
+  background-size: 14px 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .matched-paper-details {
+    padding: 15px;
+  }
+  
+  .match-indicator {
+    font-size: 11px;
+    padding: 3px 10px;
+    top: -8px;
+    right: 8px;
+  }
+}
+
+/* 匹配标记样式 */
+.match-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
+  background: var(--gold-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.5);
+  z-index: 5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+  animation: goldPulse 2s infinite;
+  cursor: help;
+}
+
+@keyframes starShine {
+  0% { 
+    transform: scale(1) rotate(0deg); 
+    box-shadow: 0 2px 6px rgba(212, 175, 55, 0.5);
+  }
+  50% { 
+    transform: scale(1.1) rotate(5deg); 
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.7);
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    box-shadow: 0 2px 6px rgba(212, 175, 55, 0.5);
+  }
+}
+
+.list-view .match-badge {
+  position: absolute;
+  top: -6px; 
+  right: -6px;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .match-badge {
+    width: 20px;
+    height: 20px;
+    background-size: 12px 12px;
+    top: -4px;
+    right: -4px;
+  }
+}
+
+/* 匹配信息样式 */
+.match-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin: 16px 0;
+  padding: 15px;
+  background-color: rgba(255, 215, 0, 0.05);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  position: relative;
+}
+
+.match-star-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--gold-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='white' stroke='white' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px 20px;
+  animation: starTwinkle 4s infinite;
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+    box-shadow: 0 2px 12px rgba(255, 215, 0, 0.7);
+  }
+}
+
+.match-details {
+  flex-grow: 1;
+}
+
+.match-details h4 {
+  margin: 0 0 8px 0;
+  color: var(--gold-dark);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.match-details p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .match-info {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .match-star-icon {
+    width: 30px;
+    height: 30px;
+    background-size: 16px 16px;
+  }
+  
+  .match-details h4 {
+    font-size: 15px;
+  }
+  
+  .match-details p {
+    font-size: 13px;
+  }
+}
+
+/* 在移动端优化高亮样式 */
+@media (max-width: 768px) {
+  .keyword-highlight, .author-highlight {
+    padding: 0 1px;
+    border-radius: 2px;
+  }
 } 
