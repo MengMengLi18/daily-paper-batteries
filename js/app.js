@@ -282,10 +282,28 @@ async function fetchGitHubStats() {
 }
 
 function initEventListeners() {
-  document.getElementById('calendarButton').addEventListener('click', toggleDatePicker);
+  // 日期选择器相关的事件监听
+  const calendarButton = document.getElementById('calendarButton');
+  calendarButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDatePicker();
+  });
   
-  // document.getElementById('toggleView').addEventListener('click', toggleView);
+  const datePickerModal = document.querySelector('.date-picker-modal');
+  datePickerModal.addEventListener('click', (event) => {
+    if (event.target === datePickerModal) {
+      toggleDatePicker();
+    }
+  });
   
+  const datePickerContent = document.querySelector('.date-picker-content');
+  datePickerContent.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  document.getElementById('dateRangeMode').addEventListener('change', toggleRangeMode);
+  
+  // 其他原有的事件监听器
   document.getElementById('closeModal').addEventListener('click', closeModal);
   
   document.querySelector('.paper-modal').addEventListener('click', (event) => {
@@ -293,14 +311,6 @@ function initEventListeners() {
       closeModal();
     }
   });
-  
-  document.querySelector('.date-picker-modal').addEventListener('click', (event) => {
-    if (event.target === document.querySelector('.date-picker-modal')) {
-      toggleDatePicker();
-    }
-  });
-  
-  document.getElementById('dateRangeMode').addEventListener('change', toggleRangeMode);
   
   // 添加鼠标滚轮横向滚动支持
   const categoryScroll = document.querySelector('.category-scroll');
@@ -336,24 +346,15 @@ function initEventListeners() {
       }
     });
   }
-  
-  // 字体大小滑块事件监听
-  // const fontSizeSlider = document.getElementById('fontSize');
-  // if (fontSizeSlider) {
-  //   fontSizeSlider.addEventListener('input', updateFontSizeValue);
-  // }
-  
-  // 保存设置按钮事件监听
-  // const saveSettingsButton = document.getElementById('saveSettings');
-  // if (saveSettingsButton) {
-  //   saveSettingsButton.addEventListener('click', saveSettings);
-  // }
-  
-  // 重置设置按钮事件监听
-  // const resetSettingsButton = document.getElementById('resetSettings');
-  // if (resetSettingsButton) {
-  //   resetSettingsButton.addEventListener('click', resetSettings);
-  // }
+
+  // 其他事件监听器...
+  const categoryButtons = document.querySelectorAll('.category-button');
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.dataset.category;
+      filterByCategory(category);
+    });
+  });
 }
 
 async function fetchAvailableDates() {
