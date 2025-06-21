@@ -54,8 +54,10 @@ Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-
 8. You can manually click **Run workflow** to test if it works well (it may take about one hour). By default, this action will automatically run every day. You can modify it in `.github/workflows/run.yml`
 
 # To-do list
-- [x] Replace markdown with GitHub pages front-end.
+- [x] Feature: Replace markdown with GitHub pages front-end.
 - [ ] Bugfix: In the statistics page, the number of papers for a keyword is not correct.
+- [ ] Bugfix: In the date picker, the date and week do not correspond.
+- [ ] Feature: Extract keywords with DeepSeek.
 - [ ] Update instructions for fork users about how to use GitHub Pages.
 
 # Contributors
