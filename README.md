@@ -62,7 +62,18 @@ Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-
 
 # Contributors
 Thanks to the following contributors for this project!!!
-- [@Chi-hong22](https://github.com/Chi-hong22)
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <a href="https://github.com/JianGuanTHU"><img src="https://avatars.githubusercontent.com/u/44895708?v=4" width="100px;" alt="JianGuanTHU"/><br /><sub><b>JianGuanTHU</b></sub></a><br />
+      </td>
+      <td align="center" valign="top">
+        <a href="https://github.com/Chi-hong22"><img src="https://avatars.githubusercontent.com/u/75403952?v=4" width="100px;" alt="Chi-hong22"/><br /><sub><b>Chi-hong22</b></sub></a><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 # Star history
 
