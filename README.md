@@ -61,7 +61,7 @@ Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-
 - [ ] Update instructions for fork users about how to use GitHub Pages.
 
 # Contributors
-Thanks to the following contributors for this project!!!
+Thanks to the following special contributors for this project!!!
 <table>
   <tbody>
     <tr>
@@ -74,6 +74,25 @@ Thanks to the following contributors for this project!!!
     </tr>
   </tbody>
 </table>
+
+# Acknowledgement
+We sincerely thank the following individuals and organizations for their promotion and support!!!
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <a href="https://x.com/GitHub_Daily/status/1930610556731318781"><img src="https://pbs.twimg.com/profile_images/1660876795347111937/EIo6fIr4_400x400.jpg" width="100px;" alt="Github_Daily"/><br /><sub><b>Github_Daily</b></sub></a><br />
+      </td>
+      <td align="center" valign="top">
+        <a href="https://x.com/aigclink/status/1930897858963853746"><img src="https://pbs.twimg.com/profile_images/1729450995850027008/gllXr6bh_400x400.jpg" width="100px;" alt="AIGCLINK"/><br /><sub><b>AIGCLINK</b></sub></a><br />
+      </td>
+      <td align="center" valign="top">
+        <a href="https://www.ruanyifeng.com/blog/2025/06/weekly-issue-353.html"><img src="https://avatars.githubusercontent.com/u/905434" width="100px;" alt="阮一峰的网络日志"/><br /><sub><b>阮一峰的网络日志 <br> 科技爱好者周刊（第 353 期）</b></sub></a><br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 
 # Star history
 
