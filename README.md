@@ -52,13 +52,14 @@ Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-
    5. `NAME`: your name for push to GitHub
 7. Go to your-own-repo -> Actions -> arXiv-daily-ai-enhanced
 8. You can manually click **Run workflow** to test if it works well (it may take about one hour). By default, this action will automatically run every day. You can modify it in `.github/workflows/run.yml`
+9. Set up GitHub pages: Go to your own repo -> Settings -> Pages. In `Build and deployment`, set `Source="Deploy from a branch"`, `Branch="main", "/(root)"`. Wait for a few minutes, go to https://\<username\>.github.io/daily-arXiv-ai-enhanced/. Please see this [issue](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/issues/14) for more precise instructions.
 
 # To-do list
 - [x] Feature: Replace markdown with GitHub pages front-end.
 - [ ] Bugfix: In the statistics page, the number of papers for a keyword is not correct.
 - [ ] Bugfix: In the date picker, the date and week do not correspond.
 - [ ] Feature: Extract keywords with DeepSeek.
-- [ ] Update instructions for fork users about how to use GitHub Pages.
+- [x] Update instructions for fork users about how to use GitHub Pages.
 
 # Contributors
 Thanks to the following special contributors for this project!!!
