@@ -314,8 +314,16 @@ function initEventListeners() {
     }
   });
   
-  // 添加键盘事件监听 - Esc 键关闭模态框，左右箭头键切换论文
+  // 添加键盘事件监听 - Esc 键关闭模态框，左右箭头键切换论文，R 键显示随机论文
   document.addEventListener('keydown', (event) => {
+    // 检查是否有输入框或文本区域处于焦点状态
+    const activeElement = document.activeElement;
+    const isInputFocused = activeElement && (
+      activeElement.tagName === 'INPUT' || 
+      activeElement.tagName === 'TEXTAREA' || 
+      activeElement.isContentEditable
+    );
+    
     if (event.key === 'Escape') {
       const paperModal = document.getElementById('paperModal');
       const datePickerModal = document.getElementById('datePickerModal');
@@ -340,6 +348,19 @@ function initEventListeners() {
         } else if (event.key === 'ArrowRight') {
           navigateToNextPaper();
         }
+      }
+    }
+    // R 键显示随机论文（在没有输入框焦点且日期选择器未打开时）
+    else if (event.key === 'r' || event.key === 'R') {
+      const paperModal = document.getElementById('paperModal');
+      const datePickerModal = document.getElementById('datePickerModal');
+      
+      // 只有在没有输入框焦点且日期选择器没有打开时才触发
+      // 现在允许在论文模态框打开时也能使用R键切换到随机论文
+      if (!isInputFocused && !datePickerModal.classList.contains('active')) {
+        event.preventDefault(); // 防止页面刷新
+        event.stopPropagation(); // 阻止事件冒泡
+        showRandomPaper();
       }
     }
   });
@@ -984,6 +1005,54 @@ function navigateToNextPaper() {
   currentPaperIndex = currentPaperIndex < currentFilteredPapers.length - 1 ? currentPaperIndex + 1 : 0;
   const paper = currentFilteredPapers[currentPaperIndex];
   showPaperDetails(paper, currentPaperIndex + 1);
+}
+
+// 显示随机论文
+function showRandomPaper() {
+  // 检查是否有可用的论文
+  if (currentFilteredPapers.length === 0) {
+    console.log('No papers available to show random paper');
+    return;
+  }
+  
+  // 生成随机索引
+  const randomIndex = Math.floor(Math.random() * currentFilteredPapers.length);
+  const randomPaper = currentFilteredPapers[randomIndex];
+  
+  // 更新当前论文索引
+  currentPaperIndex = randomIndex;
+  
+  // 显示随机论文
+  showPaperDetails(randomPaper, currentPaperIndex + 1);
+  
+  // 显示随机论文指示器
+  showRandomPaperIndicator();
+  
+  console.log(`Showing random paper: ${randomIndex + 1}/${currentFilteredPapers.length}`);
+}
+
+// 显示随机论文指示器
+function showRandomPaperIndicator() {
+  // 移除已存在的指示器
+  const existingIndicator = document.querySelector('.random-paper-indicator');
+  if (existingIndicator) {
+    existingIndicator.remove();
+  }
+  
+  // 创建新的指示器
+  const indicator = document.createElement('div');
+  indicator.className = 'random-paper-indicator';
+  indicator.textContent = 'Random Paper';
+  
+  // 添加到页面
+  document.body.appendChild(indicator);
+  
+  // 3秒后自动移除
+  setTimeout(() => {
+    if (indicator && indicator.parentNode) {
+      indicator.remove();
+    }
+  }, 3000);
 }
 
 function toggleDatePicker() {
