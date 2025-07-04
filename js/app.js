@@ -312,6 +312,23 @@ function initEventListeners() {
     }
   });
   
+  // 添加键盘事件监听 - Esc 键关闭模态框
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      const paperModal = document.getElementById('paperModal');
+      const datePickerModal = document.getElementById('datePickerModal');
+      
+      // 关闭论文模态框
+      if (paperModal.classList.contains('active')) {
+        closeModal();
+      }
+      // 关闭日期选择器模态框
+      else if (datePickerModal.classList.contains('active')) {
+        toggleDatePicker();
+      }
+    }
+  });
+  
   // 添加鼠标滚轮横向滚动支持
   const categoryScroll = document.querySelector('.category-scroll');
   const keywordScroll = document.querySelector('.keyword-scroll');
