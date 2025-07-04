@@ -792,14 +792,14 @@ function renderPapers() {
     `;
     
     paperCard.addEventListener('click', () => {
-      showPaperDetails(paper);
+      showPaperDetails(paper, index + 1);
     });
     
     container.appendChild(paperCard);
   });
 }
 
-function showPaperDetails(paper) {
+function showPaperDetails(paper, paperIndex) {
   const modal = document.getElementById('paperModal');
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.getElementById('modalBody');
@@ -810,7 +810,8 @@ function showPaperDetails(paper) {
     ? highlightMatches(paper.title, activeKeywords, 'keyword-highlight') 
     : paper.title;
   
-  modalTitle.innerHTML = highlightedTitle;
+  // 在标题前添加索引号
+  modalTitle.innerHTML = paperIndex ? `<span class="paper-index-badge">${paperIndex}</span> ${highlightedTitle}` : highlightedTitle;
   
   const abstractText = paper.details || '';
   
