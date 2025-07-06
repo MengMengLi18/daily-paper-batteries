@@ -5,21 +5,10 @@ let currentCategory = 'all';
 let paperData = {};
 let flatpickrInstance = null;
 let isRangeMode = false;
-const defaultCategoryPreference = ['cs.CV', 'cs.CL'];
 let activeKeywords = []; // 存储激活的关键词
 let userKeywords = []; // 存储用户的关键词
 let activeAuthors = []; // 存储激活的作者
 let userAuthors = []; // 存储用户的作者
-
-function loadCategoryPreference() {
-  // 这里的值是在构建时从环境变量注入的
-  const categoriesFromEnv = "cs.CV";
-  if (categoriesFromEnv) {
-    const preferenceFromEnv = categoriesFromEnv.split(',').map(category => category.trim());
-    return preferenceFromEnv;
-  }
-  return defaultCategoryPreference;
-}
 
 // 加载用户的关键词设置
 function loadUserKeywords() {
@@ -473,12 +462,6 @@ async function loadPapersByDate(date) {
   `;
   
   try {
-    const updatedPreference = loadCategoryPreference();
-    if (updatedPreference && updatedPreference.length > 0) {
-      defaultCategoryPreference.length = 0;
-      updatedPreference.forEach(category => defaultCategoryPreference.push(category));
-    }
-    
     const response = await fetch(`data/${date}_AI_enhanced_Chinese.jsonl`);
     const text = await response.text();
     
@@ -556,13 +539,7 @@ function getAllCategories(data) {
   
   return {
     sortedCategories: categories.sort((a, b) => {
-      const indexA = defaultCategoryPreference.indexOf(a);
-      const indexB = defaultCategoryPreference.indexOf(b);
-      
-      const valueA = indexA === -1 ? defaultCategoryPreference.length : indexA;
-      const valueB = indexB === -1 ? defaultCategoryPreference.length : indexB;
-      
-      return valueA - valueB;
+      return a.localeCompare(b);
     }),
     categoryCounts: catePaperCount
   };
