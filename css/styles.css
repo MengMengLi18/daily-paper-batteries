@@ -2062,30 +2062,6 @@ footer {
   }
 }
 
-/* Enhanced modal footer for navigation hints */
-.modal-navigation-hint {
-  font-size: 11px;
-  color: var(--text-tertiary);
-  margin-top: 4px;
-  display: flex;
-  gap: 12px;
-}
-
-.modal-navigation-hint .hint-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.modal-navigation-hint .key-indicator {
-  background: rgba(102, 126, 234, 0.1);
-  color: var(--primary-color);
-  padding: 1px 4px;
-  border-radius: 3px;
-  font-size: 10px;
-  font-weight: 600;
-}
-
 @media (max-width: 768px) {
   .random-paper-indicator {
     top: 10px;
@@ -2093,9 +2069,5 @@ footer {
     padding: 6px 12px;
     font-size: 11px;
   }
-  
-  .modal-navigation-hint {
-    flex-direction: column;
-    gap: 4px;
-  }
+
 }
