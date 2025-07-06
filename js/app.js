@@ -913,7 +913,6 @@ function showPaperDetails(paper, paperIndex) {
   `;
   
   // Update modal content
-  document.getElementById('modalTitle').textContent = paper.title;
   document.getElementById('modalBody').innerHTML = modalContent;
   document.getElementById('paperLink').href = paper.url;
   document.getElementById('pdfLink').href = paper.url.replace('abs', 'pdf') + '.pdf';
