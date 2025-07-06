@@ -2062,37 +2062,6 @@ footer {
   }
 }
 
-/* Keyboard hint for random paper */
-.keyboard-hint {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  z-index: 1001;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.keyboard-hint:hover {
-  opacity: 1;
-}
-
-.keyboard-hint .key {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin: 0 2px;
-  font-weight: 600;
-}
-
 /* Enhanced modal footer for navigation hints */
 .modal-navigation-hint {
   font-size: 11px;
@@ -2123,13 +2092,6 @@ footer {
     right: 10px;
     padding: 6px 12px;
     font-size: 11px;
-  }
-  
-  .keyboard-hint {
-    bottom: 10px;
-    right: 10px;
-    font-size: 11px;
-    padding: 6px 10px;
   }
   
   .modal-navigation-hint {
