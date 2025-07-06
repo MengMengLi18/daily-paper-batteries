@@ -5,23 +5,12 @@ let currentCategory = 'all';
 let paperData = {};
 let flatpickrInstance = null;
 let isRangeMode = false;
-const defaultCategoryPreference = ['cs.CV', 'cs.CL'];
 let activeKeywords = []; // 存储激活的关键词
 let userKeywords = []; // 存储用户的关键词
 let activeAuthors = []; // 存储激活的作者
 let userAuthors = []; // 存储用户的作者
 let currentPaperIndex = 0; // 当前查看的论文索引
 let currentFilteredPapers = []; // 当前过滤后的论文列表
-
-function loadCategoryPreference() {
-  // 这里的值是在构建时从环境变量注入的
-  const categoriesFromEnv = "cs.CV";
-  if (categoriesFromEnv) {
-    const preferenceFromEnv = categoriesFromEnv.split(',').map(category => category.trim());
-    return preferenceFromEnv;
-  }
-  return defaultCategoryPreference;
-}
 
 // 加载用户的关键词设置
 function loadUserKeywords() {
@@ -526,12 +515,6 @@ async function loadPapersByDate(date) {
   `;
   
   try {
-    const updatedPreference = loadCategoryPreference();
-    if (updatedPreference && updatedPreference.length > 0) {
-      defaultCategoryPreference.length = 0;
-      updatedPreference.forEach(category => defaultCategoryPreference.push(category));
-    }
-    
     const response = await fetch(`data/${date}_AI_enhanced_Chinese.jsonl`);
     const text = await response.text();
     
@@ -609,13 +592,7 @@ function getAllCategories(data) {
   
   return {
     sortedCategories: categories.sort((a, b) => {
-      const indexA = defaultCategoryPreference.indexOf(a);
-      const indexB = defaultCategoryPreference.indexOf(b);
-      
-      const valueA = indexA === -1 ? defaultCategoryPreference.length : indexA;
-      const valueB = indexB === -1 ? defaultCategoryPreference.length : indexB;
-      
-      return valueA - valueB;
+      return a.localeCompare(b);
     }),
     categoryCounts: catePaperCount
   };
@@ -861,6 +838,8 @@ function showPaperDetails(paper, paperIndex) {
   const modalTitle = document.getElementById('modalTitle');
   const modalBody = document.getElementById('modalBody');
   const paperLink = document.getElementById('paperLink');
+  const pdfLink = document.getElementById('pdfLink');
+  const htmlLink = document.getElementById('htmlLink');
   
   // 高亮标题中的关键词
   const highlightedTitle = activeKeywords.length > 0 
@@ -909,70 +888,36 @@ function showPaperDetails(paper, paperIndex) {
   // 判断是否需要显示高亮说明
   const showHighlightLegend = activeKeywords.length > 0 || activeAuthors.length > 0;
   
-  // 创建高亮说明HTML
-  let highlightLegendHTML = '';
-  if (showHighlightLegend) {
-    highlightLegendHTML = `
-      <div class="highlight-info">
-        ${activeKeywords.length > 0 ? `
-          <span>
-            <div class="sample keyword-sample"></div>
-            Keywords: ${activeKeywords.join(', ')}
-          </span>
-        ` : ''}
-        ${activeAuthors.length > 0 ? `
-          <span>
-            <div class="sample author-sample"></div>
-            Authors: ${activeAuthors.join(', ')}
-          </span>
-        ` : ''}
-      </div>
-    `;
-  }
-  
   // 添加匹配标记
   const matchedPaperClass = paper.isMatched ? 'matched-paper-details' : '';
   
-  // 创建匹配信息HTML
-  let matchInfoHTML = '';
-  if (paper.isMatched && paper.matchReason) {
-    matchInfoHTML = `
-      <div class="match-info">
-        <div class="match-star-icon"></div>
-        <div class="match-details">
-          <h4>匹配信息</h4>
-          <p>${paper.matchReason.join('<br>')}</p>
-        </div>
-      </div>
-    `;
-  }
-  
-  modalBody.innerHTML = `
+  const modalContent = `
     <div class="paper-details ${matchedPaperClass}">
-      ${paper.isMatched ? '<div class="match-indicator">匹配论文</div>' : ''}
-      <p><strong>作者: </strong>${highlightedAuthors}</p>
-      <p><strong>分类: </strong>${categoryDisplay}</p>
-      <p><strong>日期: </strong>${formatDate(paper.date)}</p>
+      <p><strong>Authors: </strong>${highlightedAuthors}</p>
+      <p><strong>Categories: </strong>${categoryDisplay}</p>
+      <p><strong>Date: </strong>${formatDate(paper.date)}</p>
       
-      ${paper.isMatched ? matchInfoHTML : ''}
       
-      ${showHighlightLegend ? highlightLegendHTML : ''}
-      
-      <h3>摘要</h3>
+      <h3>TL;DR</h3>
       <p>${highlightedSummary}</p>
       
       <div class="paper-sections">
-        ${paper.motivation ? `<div class="paper-section"><h4>研究动机</h4><p>${highlightedMotivation}</p></div>` : ''}
-        ${paper.method ? `<div class="paper-section"><h4>研究方法</h4><p>${highlightedMethod}</p></div>` : ''}
-        ${paper.result ? `<div class="paper-section"><h4>研究结果</h4><p>${highlightedResult}</p></div>` : ''}
-        ${paper.conclusion ? `<div class="paper-section"><h4>研究结论</h4><p>${highlightedConclusion}</p></div>` : ''}
+        ${paper.motivation ? `<div class="paper-section"><h4>Motivation</h4><p>${highlightedMotivation}</p></div>` : ''}
+        ${paper.method ? `<div class="paper-section"><h4>Method</h4><p>${highlightedMethod}</p></div>` : ''}
+        ${paper.result ? `<div class="paper-section"><h4>Result</h4><p>${highlightedResult}</p></div>` : ''}
+        ${paper.conclusion ? `<div class="paper-section"><h4>Conclusion</h4><p>${highlightedConclusion}</p></div>` : ''}
       </div>
       
-      ${highlightedAbstract ? `<h3>原文摘要</h3><p class="original-abstract">${highlightedAbstract}</p>` : ''}
+      ${highlightedAbstract ? `<h3>Abstract</h3><p class="original-abstract">${highlightedAbstract}</p>` : ''}
     </div>
   `;
   
-  paperLink.href = paper.url || `https://arxiv.org/abs/${paper.id}` || "https://arxiv.org/";
+  // Update modal content
+  document.getElementById('modalTitle').textContent = paper.title;
+  document.getElementById('modalBody').innerHTML = modalContent;
+  document.getElementById('paperLink').href = paper.url;
+  document.getElementById('pdfLink').href = paper.url.replace('abs', 'pdf') + '.pdf';
+  document.getElementById('htmlLink').href = paper.url.replace('abs', 'html');
   
   // 更新论文位置信息
   const paperPosition = document.getElementById('paperPosition');
