@@ -724,16 +724,24 @@ main {
 
 .paper-modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
   padding: 16px;
   border-top: 1px solid var(--border-color);
 }
 
-paper-navigation {
+.paper-navigation {
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+}
+
+.paper-modal-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .paper-modal-footer .button.icon-button {
