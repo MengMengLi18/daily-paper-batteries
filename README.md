@@ -62,7 +62,7 @@ Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-
 - [x] Update instructions for fork users about how to use GitHub Pages.
 
 # Contributors
- 
+Thanks to the following special contributors for contributing code or useful ideas for this project!!!
 <table>
   <tbody>
     <tr>
