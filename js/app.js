@@ -857,6 +857,9 @@ function showPaperDetails(paper, paperIndex) {
   const pdfLink = document.getElementById('pdfLink');
   const htmlLink = document.getElementById('htmlLink');
   
+  // 重置模态框的滚动位置
+  modalBody.scrollTop = 0;
+  
   // 高亮标题中的关键词
   const highlightedTitle = activeKeywords.length > 0 
     ? highlightMatches(paper.title, activeKeywords, 'keyword-highlight') 
