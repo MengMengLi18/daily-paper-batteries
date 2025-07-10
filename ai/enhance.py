@@ -47,7 +47,7 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
                 # 提取 JSON 字符串
                 json_str = error_msg.split("Function Structure arguments:", 1)[1].strip().split('are not valid JSON')[0].strip()
                 # 预处理 LaTeX 数学符号 - 使用四个反斜杠来确保正确转义
-                json_str = json_str.replace('\\', '\\\\\\\\')
+                json_str = json_str.replace('\\', '\\\\')
                 # 尝试解析修复后的 JSON
                 fixed_data = json.loads(json_str)
                 item['AI'] = fixed_data
@@ -124,8 +124,6 @@ def main():
     seen_ids = set()
     unique_data = []
     for item in data:
-        if item['id'] not in ['2507.06078']:
-            continue
         if item['id'] not in seen_ids:
             seen_ids.add(item['id'])
             unique_data.append(item)
