@@ -1,13 +1,26 @@
-# About
-This tool will daily crawl https://arxiv.org and use LLMs to summarize them.
+# 🚀 daily-arXiv-ai-enhanced
 
-Try in: https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/
+> Your AI-powered daily digest of arXiv papers - making research reading smarter and more personalized!
 
-# Features
-- Using the free features of GitHub Actions and GitHub Pages, **no server is required**
-- Crawling data starts at dawn every day, and using DeepSeek to summarize. This period is during the off-peak discount period of DeepSeek, and it only costs about 0.2 CNY per day. 
-- Provides a GitHub Pages front-end interface, uses LocalStorage to store **personalized preference** information (such as keywords and authors of interest), and highlights papers that matches the preferences.
-- GitHub Pages takes into account the display effects of both the computer and mobile devices, ensuring that papers can be easily reviewed on mobile devices
+This innovative tool transforms how you stay updated with arXiv papers by combining automated crawling with AI-powered summarization.
+
+## ✨ Key Features
+
+🎯 **Zero Infrastructure Required**
+- Leverages GitHub Actions and Pages - no server needed
+- Completely free to deploy and use
+
+🤖 **Smart AI Summarization**
+- Daily paper crawling with DeepSeek-powered summaries
+- Cost-effective: Only ~0.2 CNY per day during off-peak hours
+
+💫 **Smart Reading Experience**
+- Personalized paper highlighting based on your interests
+- Cross-device compatibility (desktop & mobile)
+- Local preference storage for privacy
+- Flexible date range filtering
+
+👉 **[Try it now!](https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/)** - No installation required
 
 # Screenshots
 - Main page. Highlight the interested keywords and authors.
