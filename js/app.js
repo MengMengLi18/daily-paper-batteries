@@ -968,7 +968,13 @@ function showPaperDetails(paper, paperIndex) {
 }
 
 function closeModal() {
-  document.getElementById('paperModal').classList.remove('active');
+  const modal = document.getElementById('paperModal');
+  const modalBody = document.getElementById('modalBody');
+  
+  // 重置模态框的滚动位置
+  modalBody.scrollTop = 0;
+  
+  modal.classList.remove('active');
   document.body.style.overflow = '';
 }
 
