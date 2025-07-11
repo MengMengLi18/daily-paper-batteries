@@ -88,6 +88,9 @@ Thanks to the following special contributors for contributing code, discovering 
       <td align="center" valign="top">
         <a href="https://github.com/chaozg"><img src="https://avatars.githubusercontent.com/u/69794131?v=4" width="100px;" alt="Chi-hong22"/><br /><sub><b>chaozg</b></sub></a><br />
       </td>
+      <td align="center" valign="top">
+        <a href="https://github.com/quantum-ctrl"><img src="https://avatars.githubusercontent.com/u/16505311?v=4" width="100px;" alt="Chi-hong22"/><br /><sub><b>quantum-ctrl</b></sub></a><br />
+      </td>
     </tr>
   </tbody>
 </table>
