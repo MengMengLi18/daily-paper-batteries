@@ -83,7 +83,7 @@ def perform_deduplication():
 
     try:
         today_papers, today_ids = load_papers_data(today_file)
-        print(f"今日论文总数: {len(today_papers)}", file=sys.stderr)
+        print(f"今日论文总数: {len(today_papers)} / Today's total papers: {len(today_papers)}", file=sys.stderr)
 
         if not today_papers:
             return "no_data"
@@ -96,36 +96,36 @@ def perform_deduplication():
             _, past_ids = load_papers_data(history_file)
             history_ids.update(past_ids)
 
-        print(f"历史{history_days}日去重库大小: {len(history_ids)}", file=sys.stderr)
+        print(f"历史{history_days}日去重库大小: {len(history_ids)} / History {history_days} days deduplication library size: {len(history_ids)}", file=sys.stderr)
 
         duplicate_ids = today_ids & history_ids
 
         if duplicate_ids:
-            print(f"发现 {len(duplicate_ids)} 篇历史重复论文", file=sys.stderr)
+            print(f"发现 {len(duplicate_ids)} 篇历史重复论文 / Found {len(duplicate_ids)} historical duplicate papers", file=sys.stderr)
             new_papers = [paper for paper in today_papers if paper.get('id', '') not in duplicate_ids]
 
-            print(f"去重后剩余论文数: {len(new_papers)}", file=sys.stderr)
+            print(f"去重后剩余论文数: {len(new_papers)} / Remaining papers after deduplication: {len(new_papers)}", file=sys.stderr)
 
             if new_papers:
                 if save_papers_data(new_papers, today_file):
-                    print(f"已更新今日文件，移除 {len(duplicate_ids)} 篇重复论文", file=sys.stderr)
+                    print(f"已更新今日文件，移除 {len(duplicate_ids)} 篇重复论文 / Today's file updated, removed {len(duplicate_ids)} duplicate papers", file=sys.stderr)
                     return "has_new_content"
                 else:
-                    print("保存去重后的数据失败", file=sys.stderr)
+                    print("保存去重后的数据失败 / Failed to save deduplicated data", file=sys.stderr)
                     return "error"
             else:
                 try:
                     os.remove(today_file)
-                    print("所有论文均为重复内容，已删除今日文件", file=sys.stderr)
+                    print("所有论文均为重复内容，已删除今日文件 / All papers are duplicate content, today's file deleted", file=sys.stderr)
                 except Exception as e:
-                    print(f"删除文件失败: {e}", file=sys.stderr)
+                    print(f"删除文件失败: {e} / Failed to delete file: {e}", file=sys.stderr)
                 return "no_new_content"
         else:
-            print("所有内容均为新内容", file=sys.stderr)
+            print("所有内容均为新内容 / All content is new", file=sys.stderr)
             return "has_new_content"
 
     except Exception as e:
-        print(f"去重处理失败: {e}", file=sys.stderr)
+        print(f"去重处理失败: {e} / Deduplication processing failed: {e}", file=sys.stderr)
         return "error"
 
 def main():
