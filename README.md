@@ -3,6 +3,7 @@
 > Your AI-powered daily digest of arXiv papers - making research reading smarter and more personalized!
 
 This innovative tool transforms how you stay updated with arXiv papers by combining automated crawling with AI-powered summarization.
+<a href="https://hellogithub.com/repository/dw-dengwei/daily-arXiv-ai-enhanced" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=08bce6d478704f3aa4030d11fa08d397&claim_uid=lbNO5oE0sy1KGYW" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 ## ✨ Key Features
 
