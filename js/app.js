@@ -563,10 +563,11 @@ function initDatePicker() {
     enable: [
       function(date) {
         // 只启用有效日期
-        const dateStr = date.getFullYear() + "-" + 
-                        String(date.getMonth() + 1).padStart(2, '0') + "-" + 
+        const dateStr = date.getFullYear() + "-" +
+                        String(date.getMonth() + 1).padStart(2, '0') + "-" +
                         String(date.getDate()).padStart(2, '0');
-        return !!enabledDatesMap[dateStr];
+        // 在 availableDates[0] 之后的日期全部返回 false，否则返回 true
+        return dateStr <= availableDates[0];
       }
     ],
     onChange: function(selectedDates, dateStr) {
@@ -579,10 +580,10 @@ function initDatePicker() {
       } else if (!isRangeMode && selectedDates.length === 1) {
         // 处理单个日期选择
         const selectedDate = formatDateForAPI(selectedDates[0]);
-        if (availableDates.includes(selectedDate)) {
+        // if (availableDates.includes(selectedDate)) {
           loadPapersByDate(selectedDate);
           toggleDatePicker();
-        }
+        // }
       }
     }
   });
@@ -631,7 +632,32 @@ async function loadPapersByDate(date) {
   try {
     const selectedLanguage = selectLanguageForDate(date);
     const response = await fetch(`data/${date}_AI_enhanced_${selectedLanguage}.jsonl`);
+    // 如果文件不存在（例如返回 404），在论文展示区域提示没有论文
+    if (!response.ok) {
+      if (response.status === 404) {
+        container.innerHTML = `
+          <div class="loading-container">
+            <p>No papers found for this date.</p>
+          </div>
+        `;
+        paperData = {};
+        renderCategoryFilter({ sortedCategories: [], categoryCounts: {} });
+        return;
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
     const text = await response.text();
+    // 空文件也提示没有论文
+    if (!text || text.trim() === '') {
+      container.innerHTML = `
+        <div class="loading-container">
+          <p>No papers found for this date.</p>
+        </div>
+      `;
+      paperData = {};
+      renderCategoryFilter({ sortedCategories: [], categoryCounts: {} });
+      return;
+    }
     
     paperData = parseJsonlData(text, date);
     
