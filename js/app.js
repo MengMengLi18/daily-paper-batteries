@@ -376,6 +376,27 @@ function initEventListeners() {
     });
   });
 
+  // 回到顶部按钮：滚动显示/隐藏 + 点击回到顶部
+  const backToTopButton = document.getElementById('backToTop');
+  if (backToTopButton) {
+    const updateBackToTopVisibility = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      if (scrollTop > 300) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+    };
+
+    // 初始判断一次（防止刷新在中部时不显示）
+    updateBackToTopVisibility();
+    window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   // 文本搜索：放大镜切换显示输入框
   const searchToggle = document.getElementById('textSearchToggle');
   const searchWrapper = document.querySelector('#textSearchContainer .search-input-wrapper');
