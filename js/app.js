@@ -413,6 +413,9 @@ function initEventListeners() {
       filterByCategory(category);
     });
   });
+  
+  // 回到顶部按钮功能
+  initBackToTopButton();
 }
 
 // Function to detect preferred language based on browser settings
@@ -701,6 +704,12 @@ function filterByCategory(category) {
   
   // 保持当前激活的作者
   renderAuthorTags();
+  
+  // 重置页面滚动条到顶部
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   
   renderPapers();
 }
@@ -1232,4 +1241,39 @@ function togglePdfSize(button) {
       togglePdfSize(button);
     });
   }
+}
+
+// 初始化回到顶部按钮
+function initBackToTopButton() {
+  const backToTopButton = document.getElementById('backToTop');
+  
+  if (!backToTopButton) return;
+  
+  // 点击回到顶部
+  backToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+  
+  // 监听滚动事件，控制按钮显示/隐藏
+  let scrollTimeout;
+  window.addEventListener('scroll', () => {
+    // 清除之前的定时器
+    clearTimeout(scrollTimeout);
+    
+    // 延迟执行，避免频繁触发
+    scrollTimeout = setTimeout(() => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 300) {
+        // 显示按钮
+        backToTopButton.classList.add('visible');
+      } else {
+        // 隐藏按钮
+        backToTopButton.classList.remove('visible');
+      }
+    }, 10);
+  });
 }
