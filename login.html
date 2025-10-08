@@ -92,6 +92,7 @@
         }
         .remember-me {
             margin-top: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -111,11 +112,41 @@
             font-size: 12px;
             color: #999;
         }
+        /* Site logo styles */
+        .site-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none !important;
+            margin-bottom: 30px;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+        .site-logo:hover {
+            text-decoration: none;
+            opacity: 0.9;
+        }
+        .logo-image {
+            height: 36px;
+            width: auto;
+        }
+        .site-title {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>🔐 Access Verification</h1>
+        <a href="index.html" class="site-logo">
+            <img src="assets/logo2-removebg-preview.png" alt="Daily arXiv AI Enhanced Logo" class="logo-image">
+            <span class="site-title">Daily arXiv AI Enhanced</span>
+        </a>
+        <h1>Access Verification</h1>
         <div class="subtitle">Please enter password to continue</div>
         <form id="loginForm">
             <div class="input-group">
@@ -140,7 +171,7 @@
             </div>
         </form>
         <div class="footer">
-            Powered by GitHub Actions & Pages
+            Powered by daily-arXiv-ai-enhanced
         </div>
     </div>
 
