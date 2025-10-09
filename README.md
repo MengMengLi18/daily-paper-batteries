@@ -9,9 +9,6 @@
 
 This innovative tool transforms how you stay updated with arXiv papers by combining automated crawling with AI-powered summarization.
 
-![GitHub License](https://img.shields.io/github/license/dw-dengwei/daily-arXiv-ai-enhanced?style=flat)
-
-
 
 ## ✨ Key Features
 
