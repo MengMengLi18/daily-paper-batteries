@@ -1,6 +1,11 @@
 # 🚀 daily-arXiv-ai-enhanced
 
-> Your AI-powered daily digest of arXiv papers - making research reading smarter and more personalized!
+> [!CAUTION]
+> 若您所在法域对学术数据有审查要求，谨慎运行本代码；任何二次分发版本必须移除对中国境内可访问的入口并履行内容审查义务，否则一切法律后果由下游自行承担。
+
+> [!CAUTION]
+> If your jurisdiction has censorship requirements for academic data, run this code with caution; any secondary distribution version must remove the entrance accessible to China and fulfill the content review obligations, otherwise all legal consequences will be borne by the downstream.
+
 
 This innovative tool transforms how you stay updated with arXiv papers by combining automated crawling with AI-powered summarization.
 ![GitHub License](https://img.shields.io/github/license/dw-dengwei/daily-arXiv-ai-enhanced?style=flat)
