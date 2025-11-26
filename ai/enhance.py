@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict
 from queue import Queue
@@ -57,9 +58,48 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
             print(f"Sensitive check error: {e}", file=sys.stderr)
             return True
 
+    def check_github_code(content: str) -> Dict:
+        """提取并验证 GitHub 链接"""
+        # 匹配 github.com/owner/repo 格式
+        github_pattern = r"https?://github\.com/([a-zA-Z0-9-_]+)/([a-zA-Z0-9-_\.]+)"
+        match = re.search(github_pattern, content)
+        
+        code_info = {}
+        if match:
+            owner, repo = match.groups()
+            # 清理 repo 名称，去掉可能的 .git 后缀或末尾的标点
+            repo = repo.rstrip(".git").rstrip(".,)")
+            
+            full_url = f"https://github.com/{owner}/{repo}"
+            code_info["code_url"] = full_url
+            
+            # 尝试调用 GitHub API 获取信息
+            github_token = os.environ.get("GITHUB_TOKEN")
+            headers = {"Accept": "application/vnd.github.v3+json"}
+            if github_token:
+                headers["Authorization"] = f"token {github_token}"
+            
+            try:
+                api_url = f"https://api.github.com/repos/{owner}/{repo}"
+                resp = requests.get(api_url, headers=headers, timeout=5)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    code_info["code_stars"] = data.get("stargazers_count", 0)
+                    code_info["code_last_update"] = data.get("pushed_at", "")[:10]
+            except Exception:
+                # API 调用失败不影响主流程
+                pass
+                
+        return code_info
+
     # 检查 summary 字段
     if is_sensitive(item.get("summary", "")):
         return None
+
+    # 检测代码可用性
+    code_info = check_github_code(item.get("summary", ""))
+    if code_info:
+        item.update(code_info)
 
     """处理单个数据项"""
     # Default structure with meaningful fallback values
