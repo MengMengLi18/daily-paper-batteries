@@ -6,6 +6,10 @@
 
 # 环境变量检查和提示 / Environment variables check and prompt
 echo "=== 本地调试环境检查 / Local Debug Environment Check ==="
+if [ -z "$TOKEN_GITHUB" ]; then
+    echo "⚠️  提示：未设置 TOKEN_GITHUB / Warning: TOKEN_GITHUB not set"
+    echo "📝 要进行完整本地调试，请设置以下环境变量 / For complete local debugging, please set the following environment variables:"
+    echo ""
 
 # 检查必需的环境变量 / Check required environment variables
 if [ -z "$OPENAI_API_KEY" ]; then

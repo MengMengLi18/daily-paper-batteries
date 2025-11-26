@@ -74,7 +74,7 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
             code_info["code_url"] = full_url
             
             # 尝试调用 GitHub API 获取信息
-            github_token = os.environ.get("GITHUB_TOKEN")
+            github_token = os.environ.get("TOKEN_GITHUB")
             headers = {"Accept": "application/vnd.github.v3+json"}
             if github_token:
                 headers["Authorization"] = f"token {github_token}"
