@@ -60,11 +60,12 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
 
     def check_github_code(content: str) -> Dict:
         """提取并验证 GitHub 链接"""
-        # 匹配 github.com/owner/repo 格式
+        code_info = {}
+
+        # 1. 优先匹配 github.com/owner/repo 格式
         github_pattern = r"https?://github\.com/([a-zA-Z0-9-_]+)/([a-zA-Z0-9-_\.]+)"
         match = re.search(github_pattern, content)
         
-        code_info = {}
         if match:
             owner, repo = match.groups()
             # 清理 repo 名称，去掉可能的 .git 后缀或末尾的标点
@@ -89,6 +90,18 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
             except Exception:
                 # API 调用失败不影响主流程
                 pass
+            return code_info
+
+        # 2. 如果没有 github.com，尝试匹配 github.io
+        github_io_pattern = r"https?://[a-zA-Z0-9-_]+\.github\.io(?:/[a-zA-Z0-9-_\.]+)*"
+        match_io = re.search(github_io_pattern, content)
+        
+        if match_io:
+            url = match_io.group(0)
+            # 清理末尾标点
+            url = url.rstrip(".,)")
+            code_info["code_url"] = url
+            # github.io 不进行 star 和 update 判断
                 
         return code_info
 
@@ -98,6 +111,7 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
 
     # 检测代码可用性
     code_info = check_github_code(item.get("summary", ""))
+    print("code_info-------------:", code_info)
     if code_info:
         item.update(code_info)
 
