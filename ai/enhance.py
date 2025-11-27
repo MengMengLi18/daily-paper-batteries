@@ -111,7 +111,6 @@ def process_single_item(chain, item: Dict, language: str) -> Dict:
 
     # 检测代码可用性
     code_info = check_github_code(item.get("summary", ""))
-    print("code_info-------------:", code_info)
     if code_info:
         item.update(code_info)
 
