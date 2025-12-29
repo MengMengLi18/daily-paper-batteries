@@ -728,10 +728,16 @@ function parseJsonlData(jsonlText, date) {
       
       const summary = paper.AI && paper.AI.tldr ? paper.AI.tldr : paper.summary;
       
+      // 处理作者数据：保留数组格式，同时生成字符串格式用于匹配
+      const authorsArray = Array.isArray(paper.authors) ? paper.authors : 
+                          (typeof paper.authors === 'string' ? paper.authors.split(',').map(a => a.trim()) : []);
+      const authorsString = authorsArray.join(', ');
+      
       result[primaryCategory].push({
         title: paper.title,
         url: paper.abs || paper.pdf || `https://arxiv.org/abs/${paper.id}`,
-        authors: Array.isArray(paper.authors) ? paper.authors.join(', ') : paper.authors,
+        authors: authorsString, // 保留字符串格式用于匹配和高亮
+        authorsArray: authorsArray, // 保留数组格式用于格式化显示
         category: allCategories,
         summary: summary,
         details: paper.summary || '',
@@ -818,6 +824,33 @@ function filterByCategory(category) {
   });
   
   renderPapers();
+}
+
+// 格式化作者列表显示：如果超过4个作者，显示前2个、后2个，中间用省略号
+function formatAuthorsDisplay(authors) {
+  // 如果authors是字符串，先转换为数组
+  let authorsArray = [];
+  if (Array.isArray(authors)) {
+    authorsArray = authors;
+  } else if (typeof authors === 'string') {
+    // 按逗号分割，并去除空格
+    authorsArray = authors.split(',').map(a => a.trim()).filter(a => a.length > 0);
+  } else {
+    return authors || '';
+  }
+  
+  // 如果不超过4个作者，全部显示
+  if (authorsArray.length <= 4) {
+    return authorsArray.join(', ');
+  }
+  
+  // 超过4个作者：显示第一、第二、倒数第二、倒数第一
+  const first = authorsArray[0];
+  const second = authorsArray[1];
+  const secondLast = authorsArray[authorsArray.length - 2];
+  const last = authorsArray[authorsArray.length - 1];
+  
+  return `${first}, ${second}, ..., ${secondLast}, ${last}`;
 }
 
 // 帮助函数：高亮文本中的匹配内容
@@ -1120,13 +1153,16 @@ function renderPapers() {
       ? highlightMatches(paper.summary, titleSummaryTerms, 'keyword-highlight') 
       : paper.summary;
 
+    // 格式化作者显示（缩短显示）
+    const formattedAuthors = formatAuthorsDisplay(paper.authorsArray || paper.authors);
+    
     // 高亮作者（作者过滤 + 文本搜索）
     const authorTerms = [];
     if (activeAuthors.length > 0) authorTerms.push(...activeAuthors);
     if (textSearchQuery && textSearchQuery.trim().length > 0) authorTerms.push(textSearchQuery.trim());
     const highlightedAuthors = authorTerms.length > 0 
-      ? highlightMatches(paper.authors, authorTerms, 'author-highlight') 
-      : paper.authors;
+      ? highlightMatches(formattedAuthors, authorTerms, 'author-highlight') 
+      : formattedAuthors;
     
     // 构建 GitHub 按钮 HTML
     // let githubHtml = '';
@@ -1204,13 +1240,16 @@ function showPaperDetails(paper, paperIndex) {
     paper.allCategories.join(', ') : 
     paper.category;
   
+  // 格式化作者显示（缩短显示）
+  const formattedModalAuthors = formatAuthorsDisplay(paper.authorsArray || paper.authors);
+  
   // 高亮作者（作者过滤 + 文本搜索）
   const modalAuthorTerms = [];
   if (activeAuthors.length > 0) modalAuthorTerms.push(...activeAuthors);
   if (textSearchQuery && textSearchQuery.trim().length > 0) modalAuthorTerms.push(textSearchQuery.trim());
   const highlightedAuthors = modalAuthorTerms.length > 0 
-    ? highlightMatches(paper.authors, modalAuthorTerms, 'author-highlight') 
-    : paper.authors;
+    ? highlightMatches(formattedModalAuthors, modalAuthorTerms, 'author-highlight') 
+    : formattedModalAuthors;
   
   // 高亮摘要（关键词 + 文本搜索）
   const highlightedSummary = modalTitleTerms.length > 0 
