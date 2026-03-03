@@ -12,3 +12,4 @@ ai/.env
 test/*
 .idea/
 .cursorrulestest_local.sh
+getLocal.sh
