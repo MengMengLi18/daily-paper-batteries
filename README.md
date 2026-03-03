@@ -36,12 +36,14 @@ https://github.com/user-attachments/assets/b25712a4-fb8d-484f-863d-e8da6922f9d7
 
 
 # How to use
-This repo will daily crawl arXiv papers about **cs.CV, cs.GR, cs.CL and cs.AI**, and use **DeepSeek** to summarize the papers in **Chinese**.
+This repo will daily crawl papers about **your keywords**, and use **DeepSeek** to summarize the papers.
+
 If you wish to crawl other arXiv categories, use other LLMs, or other languages, please follow the instructions.
+
 Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/. Please star it if you like :)
 
 **Instructions:**
-1. Fork this repo to your own account and delete my own information in [by-me-a-coffee](./buy-me-a-coffee/README.md).
+1. Fork this repo to your own account.
 2. Go to: your-own-repo -> Settings -> Secrets and variables -> Actions
 3. Go to Secrets. Secrets are encrypted and used for sensitive data
 4. Create two repository secrets named `OPENAI_API_KEY` and `OPENAI_BASE_URL`, and input corresponding values.
