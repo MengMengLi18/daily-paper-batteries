@@ -136,3 +136,35 @@ We sincerely thank the following individuals and organizations for their promoti
 
 # Buy me a coffee
 [here](./buy-me-a-coffee/README.md)
+## 🖥️ Local Testing
+
+### Prerequisites
+
+Install required Python packages:
+```bash
+pip install langchain langchain-core langchain-openai requests
+```
+
+### Setup
+
+Create a local test script `getLocal.sh`:
+```bash
+cat > getLocal.sh << 'SCRIPT'
+#!/bin/bash
+set -e
+
+export OPENAI_API_KEY="your-deepseek-key"
+export OPENAI_BASE_URL="https://api.deepseek.com/v1"
+export LANGUAGE="Chinese"
+export MODEL_NAME="deepseek-chat"
+
+today=$(date -u "+%Y-%m-%d")
+python daily_arxiv/arxiv_fetch.py --output data/${today}.jsonl
+cd ai && python enhance.py --data ../data/${today}.jsonl && cd ..
+cd to_md && python convert.py --data ../data/${today}_AI_enhanced_${LANGUAGE}.jsonl && cd ..
+SCRIPT
+chmod +x getLocal.sh
+echo "getLocal.sh" >> .gitignore
+```
+
+> ⚠️ Never commit `getLocal.sh` — it contains your API key.

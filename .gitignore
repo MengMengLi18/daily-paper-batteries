@@ -11,4 +11,4 @@ wheels/
 ai/.env
 test/*
 .idea/
-.cursorrules
+.cursorrulestest_local.sh

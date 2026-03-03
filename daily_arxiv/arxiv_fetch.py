@@ -22,7 +22,7 @@ SEARCH_TOPICS = [
         ],
         "keywords": [
             "battery", "batteries", "cathode", "anode", "electrolyte",
-            "lithium", "NMC", "LFP", "solid-state", "all-solid-state",
+            "lithium", "NMC", "solid-state", "all-solid-state",
             "electrochemical", "chemo-mechanical", "finite element",
             "phase field", "simulation", "modeling", "degradation",
             "ionic conductivity", "diffusion",
