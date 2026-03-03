@@ -72,38 +72,14 @@ else
     echo "📝 今日文件不存在，准备新建... / Today's file doesn't exist, ready to create new one..."
 fi
 
-cd daily_arxiv
-scrapy crawl arxiv -o ../data/${today}.jsonl
+python daily_arxiv/arxiv_fetch.py --output data/${today}.jsonl
 
-if [ ! -f "../data/${today}.jsonl" ]; then
+if [ ! -f "data/${today}.jsonl" ]; then
     echo "爬取失败，未生成数据文件 / Crawling failed, no data file generated"
     exit 1
 fi
 
-# 第二步：检查去重 / Step 2: Check duplicates  
-echo "步骤2：执行去重检查... / Step 2: Performing intelligent deduplication check..."
-python daily_arxiv/check_stats.py
-dedup_exit_code=$?
 
-case $dedup_exit_code in
-    0)
-        # check_stats.py已输出成功信息，继续处理 / check_stats.py already output success info, continue processing
-        ;;
-    1)
-        # check_stats.py已输出无新内容信息，停止处理 / check_stats.py already output no new content info, stop processing
-        exit 1
-        ;;
-    2)
-        # check_stats.py已输出错误信息，停止处理 / check_stats.py already output error info, stop processing
-        exit 2
-        ;;
-    *)
-        echo "❌ 未知退出码，停止处理... / Unknown exit code, stopping..."
-        exit 1
-        ;;
-esac
-
-cd ..
 
 # 第三步：AI处理 / Step 3: AI processing
 if [ "$PARTIAL_MODE" = "false" ]; then

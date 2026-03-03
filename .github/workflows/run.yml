@@ -35,70 +35,18 @@ jobs:
             echo "✅ 已删除现有文件：data/${today}.jsonl / Deleted existing file: data/${today}.jsonl"
         else
             echo "📝 今日文件不存在，准备新建... / Today's file doesn't exist, ready to create new one..."
-        fi
         
-        cd daily_arxiv
-        export OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-        export OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL }}
-        export TOKEN_GITHUB=${{ secrets.TOKEN_GITHUB }}
-        export LANGUAGE="${{ vars.LANGUAGE }}"
-        export CATEGORIES="${{ vars.CATEGORIES }}"
-        export MODEL_NAME="${{ vars.MODEL_NAME }}"
+        python daily_arxiv/arxiv_fetch.py --output data/${today}.jsonl
         
-        # 使用Scrapy爬取
-        # Use Scrapy to crawl
-        scrapy crawl arxiv -o ../data/${today}.jsonl
-        
-        # 检查爬取是否成功 / Check if crawling was successful
-        if [ ! -f "../data/${today}.jsonl" ]; then
-            echo "爬取失败，未生成数据文件 / Crawling failed, no data file generated"
+        if [ $? -ne 0 ]; then
+            echo "抓取失败或今日无新论文 / Fetch failed or no new papers"
             exit 1
-        fi
         
         echo "crawl_date=$today" >> $GITHUB_OUTPUT
         echo "爬取完成 / Crawling completed"
         
-    - name: Check for duplicates
-      id: dedup_check
-      run: |
-        source .venv/bin/activate
-        echo "执行去重检查... / Performing intelligent deduplication check..."
-        
-        cd daily_arxiv
-        # 执行去重检查脚本 / Execute intelligent deduplication check script
-        set +e  # 暂时允许命令失败 / Temporarily allow command failure
-        python daily_arxiv/check_stats.py
-        
-        # 获取退出码 / Get exit code
-        dedup_exit_code=$?
-        set -e  # 恢复严格模式 / Restore strict mode
-        
-        echo "去重检查退出码: $dedup_exit_code / Dedup check exit code: $dedup_exit_code"
-        echo "dedup_exit_code=$dedup_exit_code" >> $GITHUB_OUTPUT
-        
-        case $dedup_exit_code in
-            0)
-                echo "has_new_content=true" >> $GITHUB_OUTPUT
-                ;;
-            1)
-                echo "has_new_content=false" >> $GITHUB_OUTPUT
-                echo "skip_reason=no_new_content" >> $GITHUB_OUTPUT
-                ;;
-            2)
-                echo "has_new_content=false" >> $GITHUB_OUTPUT
-                echo "skip_reason=processing_error" >> $GITHUB_OUTPUT
-                exit 1
-                ;;
-            *)
-                echo "❌ 未知退出码，停止工作流 / Unknown exit code, stop workflow"
-                echo "has_new_content=false" >> $GITHUB_OUTPUT
-                echo "skip_reason=unknown_error" >> $GITHUB_OUTPUT
-                exit 1
-                ;;
-        esac
-        
     - name: AI Enhancement Processing
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         source .venv/bin/activate
         today=${{ steps.crawl_step.outputs.crawl_date }}
@@ -116,11 +64,10 @@ jobs:
         if [ $? -ne 0 ]; then
             echo "AI处理失败 / AI processing failed"
             exit 1
-        fi
         echo "AI增强处理完成 / AI enhancement processing completed"
         
     - name: Convert to Markdown
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         source .venv/bin/activate
         today=${{ steps.crawl_step.outputs.crawl_date }}
@@ -141,24 +88,22 @@ jobs:
             echo "错误：未找到AI增强文件 / Error: AI enhanced file not found"
             echo "AI文件: $AI_FILE"
             exit 1
-        fi
         
         # 检查转换是否成功 / Check if conversion was successful
         if [ $? -ne 0 ]; then
             echo "Markdown转换失败 / Markdown conversion failed"
             exit 1
-        fi
         echo "Markdown转换完成 / Markdown conversion completed"
         
     - name: Update file list
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         echo "更新文件列表... / Updating file list..."
         ls data/*.jsonl | sed 's|data/||' > assets/file-list.txt
         echo "文件列表更新完成 / File list updated"
 
     - name: Generate password hash and inject into config
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         echo "🔐 Generating password hash for authentication..."
 
@@ -178,7 +123,6 @@ jobs:
           echo "✅ Password hash generated successfully"
           echo "✅ Hash length: ${#PASSWORD_HASH} characters"
           echo "🔐 Password protection is ENABLED"
-        fi
 
         # Inject hash into auth-config.js
         if [ -f "js/auth-config.js" ]; then
@@ -187,33 +131,15 @@ jobs:
         else
           echo "❌ ERROR: js/auth-config.js not found!"
           exit 1
-        fi
 
         echo "🔐 Authentication setup complete"
 
     - name: Summary
       run: |
-        if [ "${{ steps.dedup_check.outputs.has_new_content }}" = "true" ]; then
-          echo "✅ 工作流完成：去重发现新内容并成功处理 / Workflow completed: Smart deduplication found new content and processed successfully"
-        else
-          case "${{ steps.dedup_check.outputs.skip_reason }}" in
-            "no_new_content")
-              echo "ℹ️ 工作流完成：去重后无新内容 / Workflow completed: No new content after smart deduplication"
-              ;;
-            "processing_error")
-              echo "⚠️ 工作流完成：去重处理出错 / Workflow completed: Deduplication processing error"
-              ;;
-            "unknown_error")
-              echo "⚠️ 工作流完成：未知错误 / Workflow completed: Unknown error"
-              ;;
-            *)
-              echo "ℹ️ 工作流完成：未知原因跳过处理 / Workflow completed: Skipped for unknown reason"
-              ;;
-          esac
-        fi
+        echo "✅ 工作流完成 / Workflow completed"
         
     - name: Inject repository info into data-config.js
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         echo "注入仓库信息到 data-config.js... / Injecting repository info into data-config.js..."
         
@@ -232,10 +158,9 @@ jobs:
         else
           echo "❌ ERROR: js/data-config.js not found!"
           exit 1
-        fi
 
     - name: Commit code changes to main branch
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         git config --global user.email "${{ vars.EMAIL }}"
         git config --global user.name "${{ vars.NAME }}"
@@ -254,10 +179,9 @@ jobs:
         else
           git commit -m "chore: update data-config.js with repository info"
           echo "代码变更已提交到 main 分支 / Code changes committed to main branch"
-        fi
 
     - name: Push code changes to main branch
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         # 设置Git配置以处理自动合并 / Set Git config for automatic merging
         git config pull.rebase true
@@ -280,7 +204,7 @@ jobs:
         done
 
     - name: Prepare data files for data branch
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         echo "准备数据文件... / Preparing data files..."
         today=${{ steps.crawl_step.outputs.crawl_date }}
@@ -296,7 +220,7 @@ jobs:
         echo "数据文件已保存到临时目录 / Data files saved to temporary directory"
 
     - name: Setup and commit to data branch
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         git config --global user.email "${{ vars.EMAIL }}"
         git config --global user.name "${{ vars.NAME }}"
@@ -329,7 +253,6 @@ jobs:
           git add README.md
           git commit -m "chore: initialize data branch"
           git push origin data
-        fi
         
         # 从临时目录恢复数据文件 / Restore data files from temporary directory
         # 确保目录存在 / Ensure directories exist
@@ -347,10 +270,9 @@ jobs:
         else
           git commit -m "update: $today arXiv papers"
           echo "数据变更已提交到 data 分支 / Data changes committed to data branch"
-        fi
 
     - name: Push data changes to data branch
-      if: steps.dedup_check.outputs.has_new_content == 'true'
+      if: steps.crawl_step.outcome == 'success'
       run: |
         # 设置Git配置以处理自动合并 / Set Git config for automatic merging
         git config pull.rebase true
