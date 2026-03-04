@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 # ── 搜索配置 ──────────────────────────────────────────────
 SEARCH_TOPICS = [
     {
-        "category": "Batteries",
+        "category": "Battery-Simulation",
         "arxiv_categories": [
             "cond-mat.mtrl-sci",
             "cond-mat.mes-hall",
@@ -26,6 +26,26 @@ SEARCH_TOPICS = [
             "electrochemical", "chemo-mechanical", "finite element",
             "phase field", "simulation", "modeling", "degradation",
             "ionic conductivity", "diffusion",
+        ],
+    },
+    {
+        "category": "AI-Battery",
+        "arxiv_categories": [
+            "cs.LG", "cs.AI", "cond-mat.mtrl-sci", "physics.chem-ph",
+        ],
+        # 双重过滤：必须同时包含 AI 关键词 AND 电池关键词
+        "require_all": [
+            [
+                "machine learning", "deep learning", "neural network",
+                "PINN", "physics-informed", "graph neural network",
+                "diffusion model", "generative model", "transformer",
+                "foundation model", "surrogate model", "data-driven",
+            ],
+            [
+                "battery", "batteries", "cathode", "electrolyte",
+                "lithium", "NMC", "solid-state", "electrochemical",
+                "microstructure", "chemo-mechanical",
+            ],
         ],
     },
     {
