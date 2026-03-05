@@ -60,7 +60,7 @@ jobs:
         else
           PASSWORD_HASH=$(echo -n "$PASSWORD" | openssl dgst -sha256 -hex | awk '{print $2}')
         fi
-        sed -i "s/PLACEHOLDER_PASSWORD_HASH/$PASSWORD_HASH/" js/auth-config.js
+        [ -f "js/auth-config.js" ] && sed -i "s/PLACEHOLDER_PASSWORD_HASH/$PASSWORD_HASH/" js/auth-config.js || true
 
     - name: Inject repository info into data-config.js
       if: steps.crawl_step.outcome == 'success'
