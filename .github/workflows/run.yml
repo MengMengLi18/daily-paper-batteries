@@ -1,4 +1,4 @@
-name: arXiv-daily
+name: arXiv-daily-arXiv
 
 on:
   schedule:
