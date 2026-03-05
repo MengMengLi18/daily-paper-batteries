@@ -6,7 +6,7 @@ daily_arxiv/wos_fetch.py  —  每日版本(GitHub Actions)
     python daily_arxiv/wos_fetch.py --output data/data.jsonl
 """
 
-from numpy import unique
+# from numpy import unique
 import csv
 from datetime import datetime
 import os, sys, json, argparse, requests
