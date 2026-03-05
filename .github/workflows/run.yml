@@ -48,6 +48,7 @@ jobs:
     - name: Update file list
       if: steps.crawl_step.outcome == 'success'
       run: |
+        mkdir -p assets
         ls data/*.jsonl | sed 's|data/||' > assets/file-list.txt
 
     - name: Generate password hash and inject into config
