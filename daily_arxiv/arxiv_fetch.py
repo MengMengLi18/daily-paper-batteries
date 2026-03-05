@@ -10,6 +10,8 @@ import urllib.request, urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
+from numpy import unique
+
 # ── 搜索配置 ──────────────────────────────────────────────
 SEARCH_TOPICS = [
     {
@@ -139,8 +141,17 @@ def fetch_topic(topic, days_back):
             for e in entries:
                 if not is_recent(e["published"], days_back):
                     continue
-                if not kw_match(e["title"], e["summary"], topic["keywords"]):
-                    continue
+                # 双重过滤模式（AI-Battery）
+                if "require_all" in topic:
+                    if not all(
+                        kw_match(e["title"], e["summary"], group)
+                        for group in topic["require_all"]
+                    ):
+                        continue
+                # 单组关键词模式（Battery-Simulation, WorldModel-Diffusion）
+                else:
+                    if not kw_match(e["title"], e["summary"], topic["keywords"]):
+                        continue
                 if e["arxiv_id"] not in all_papers:
                     all_papers[e["arxiv_id"]] = {
                         "id": e["arxiv_id"],
@@ -158,6 +169,21 @@ def fetch_topic(topic, days_back):
             print(f"    ❌ {cat} 失败: {ex}", file=sys.stderr)
     return list(all_papers.values())
 
+def save_csv(records, output_path):
+    """将抓取结果另存一份 CSV，方便人工浏览"""
+    import csv
+    csv_path = output_path.replace(".jsonl", ".csv")
+    fieldnames = ["id", "categories", "title", "authors", "published", "abs"]
+    with open(csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for r in records:
+            row = r.copy()
+            row["categories"] = "|".join(r.get("categories", []))
+            row["authors"] = "; ".join(r.get("authors", []))
+            writer.writerow(row)
+    print(f"✅ CSV 写入: {csv_path}", file=sys.stderr)
+
 def main():
     args = parse_args()
     all_records = []
@@ -173,6 +199,8 @@ def main():
     print(f"✅ 写入: {args.output}", file=sys.stderr)
     if not all_records:
         sys.exit(1)
+    
+    save_csv(all_records, args.output)
 
 if __name__ == "__main__":
     main()
