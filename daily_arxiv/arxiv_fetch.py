@@ -10,8 +10,6 @@ import urllib.request, urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 
-from numpy import unique
-
 # ── 搜索配置 ──────────────────────────────────────────────
 SEARCH_TOPICS = [
     {
@@ -198,7 +196,7 @@ def main():
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     print(f"✅ 写入: {args.output}", file=sys.stderr)
     if not all_records:
-        sys.exit(1)
+        sys.exit(0)
     
     save_csv(all_records, args.output)
 
