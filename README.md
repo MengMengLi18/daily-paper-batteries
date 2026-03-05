@@ -1,138 +1,204 @@
-# 🚀 daily-arXiv-ai-enhanced
+# 🔋 daily-paper-batteries
 
 > [!CAUTION]
 > 若您所在法域对学术数据有审查要求，谨慎运行本代码；任何二次分发版本必须履行合规审查（包括但不限于原始论文合规性、AI合规性）义务，否则一切法律后果由下游自行承担。
 
 > [!CAUTION]
-> If your jurisdiction has censorship requirements for academic data, run this code with caution; any secondary distribution version must remove the entrance accessible to China and fulfill the content review obligations, otherwise all legal consequences will be borne by the downstream.
+> If your jurisdiction has censorship requirements for academic data, run this code with caution; any secondary distribution version must fulfill the content review obligations, otherwise all legal consequences will be borne by the downstream.
 
+本项目基于 [daily-arXiv-ai-enhanced](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced) 改造，将数据源替换为 **Web of Science (WOS)**，专注于电池力学与全固态电池领域的每日论文追踪。
 
-This innovative tool transforms how you stay updated with arXiv papers by combining automated crawling with AI-powered summarization.
+---
 
+## ✨ 主要功能
 
-## ✨ Key Features
+🎯 **无需服务器**
+- 基于 GitHub Actions 自动运行，完全免费
 
-🎯 **Zero Infrastructure Required**
-- Leverages GitHub Actions and Pages - no server needed
-- Completely free to deploy and use
+🔍 **WOS 精准检索**
+- 通过 WOS Starter API 每日抓取最新论文
+- 支持自定义关键词组合与期刊白名单过滤
 
-🤖 **Smart AI Summarization**
-- Daily paper crawling with DeepSeek-powered summaries
-- Cost-effective: Only ~0.2 CNY per day
+🤖 **AI 摘要增强**
+- 集成 AI 对论文摘要进行中文增强
 
-💫 **Smart Reading Experience**
-- Personalized paper highlighting based on your interests
-- Cross-device compatibility (desktop & mobile)
-- Local preference storage for privacy
-- Flexible date range filtering
+---
 
-👉 **[Try it now!](https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/)** - No installation required
+## 研究聚焦
 
+- 全固态电池（ASSB）与 NMC 正极材料
+- 力化学耦合（chemo-mechanical）行为
+- 相场模拟、有限元、数据驱动方法
+- 应力、断裂、扩散、各向异性等力学主题
 
+---
 
-https://github.com/user-attachments/assets/b25712a4-fb8d-484f-863d-e8da6922f9d7
+## 目录结构
 
+```
+daily_arxiv/
+    wos_fetch.py        # WOS 论文抓取脚本（每日运行）
+ai/
+    enhance.py          # AI 摘要增强
+to_md/
+    convert.py          # 将 .jsonl 转为 Markdown
+    paper_template.md   # 单篇论文 Markdown 模板
+data/                   # 每日抓取结果（.jsonl 和 .md）
+.github/                # GitHub Actions 自动化配置
+```
 
+---
 
+## 使用流程
 
-# How to use
-This repo will daily crawl arXiv papers about **cs.CV, cs.GR, cs.CL and cs.AI**, and use **DeepSeek** to summarize the papers in **Chinese**.
-If you wish to crawl other arXiv categories, use other LLMs, or other languages, please follow the instructions.
-Otherwise, you can directly use this repo in https://dw-dengwei.github.io/daily-arXiv-ai-enhanced/. Please star it if you like :)
+### 1. Fork 本仓库
 
-**Instructions:**
-1. Fork this repo to your own account and delete my own information in [by-me-a-coffee](./buy-me-a-coffee/README.md).
-2. Go to: your-own-repo -> Settings -> Secrets and variables -> Actions
-3. Go to Secrets. Secrets are encrypted and used for sensitive data
-4. Create two repository secrets named `OPENAI_API_KEY` and `OPENAI_BASE_URL`, and input corresponding values.
-5. [Optional] Set a password in `secrets.ACCESS_PASSWORD` if you do not wish others to access your page. (see https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/pull/64)
-6. Go to Variables. Variables are shown as plain text and are used for non-sensitive data
-7. Create the following repository variables:
-   1. `CATEGORIES`: separate the categories with ",", such as "cs.CL, cs.CV"
-   2. `LANGUAGE`: such as "Chinese" or "English"
-   3. `MODEL_NAME`: such as "deepseek-chat"
-   4. `EMAIL`: your email for push to GitHub
-   5. `NAME`: your name for push to GitHub
-8. Go to your-own-repo -> Actions -> arXiv-daily-ai-enhanced
-9. You can manually click **Run workflow** to test if it works well (it may take about one hour). By default, this action will automatically run every day. You can modify it in `.github/workflows/run.yml`
-10. Set up GitHub pages: Go to your own repo -> Settings -> Pages. In `Build and deployment`, set `Source="Deploy from a branch"`, `Branch="main", "/(root)"`. Wait for a few minutes, go to https://\<username\>.github.io/daily-arXiv-ai-enhanced/. Please see this [issue](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/issues/14) for more precise instructions.
+Fork 到你自己的 GitHub 账号。
 
-# Plans
-See https://github.com/users/dw-dengwei/projects/3
+### 2. 配置 Secrets
 
-# Contributors
-Thanks to the following special contributors for contributing code, discovering bugs, and sharing useful ideas for this project!!!
+进入：你的仓库 → Settings → Secrets and variables → Actions → Secrets
+
+添加以下 Secret：
+
+| 名称 | 说明 |
+|------|------|
+| `WOS_API_KEY` | WOS Starter API Key，申请地址：https://developer.clarivate.com |
+| `OPENAI_API_KEY` | AI 摘要增强所用的 API Key |
+| `OPENAI_BASE_URL` | 对应的 API Base URL |
+
+### 3. 本地运行
+
+```bash
+export WOS_API_KEY="your_api_key_here"
+
+# 抓取最近 1 天
+python daily_arxiv/wos_fetch.py --output data/data.jsonl
+
+# 抓取最近 N 天
+python daily_arxiv/wos_fetch.py --output data/data.jsonl --days 7
+```
+
+### 4. 自动运行
+
+配置完成后，GitHub Actions 每日自动执行，无需手动操作。
+
+---
+
+## 自定义配置
+
+在 `daily_arxiv/wos_fetch.py` 中修改以下两部分：
+
+### 搜索关键词（QUERY）
+
+```python
+QUERY = (
+    'TS=("NMC" OR "solid-state battery" OR "ASSB" OR ...) AND '
+    'TS=(stress OR fracture OR "phase field" OR ...)'
+)
+```
+
+第一组为研究对象，第二组为研究方法，两组**同时命中**才会被抓取。
+
+### 期刊白名单（JOURNAL_WHITELIST）
+
+```python
+JOURNAL_WHITELIST = {
+    "JOURNAL OF THE MECHANICS AND PHYSICS OF SOLIDS",
+    "NATURE ENERGY",
+    "JOURNAL OF POWER SOURCES",
+    ...
+}
+```
+
+只有白名单内的期刊才会出现在最终结果中。白名单为空集时不过滤。
+
+---
+
+## 输出格式
+
+```json
+{
+  "id": "10.1016/j.xxx",
+  "categories": ["NMC-ASSB"],
+  "title": "论文标题",
+  "authors": ["Author A", "Author B"],
+  "summary": "摘要内容",
+  "abs": "https://doi.org/...",
+  "journal": "JOURNAL OF POWER SOURCES",
+  "year": "2026"
+}
+```
+
+---
+
+## Contributors
+
+感谢原项目 [daily-arXiv-ai-enhanced](https://github.com/dw-dengwei/daily-arXiv-ai-enhanced) 的所有贡献者：
+
 <table>
   <tbody>
     <tr>
       <td align="center" valign="top">
-        <a href="https://github.com/JianGuanTHU"><img src="https://avatars.githubusercontent.com/u/44895708?v=4" width="100px;" alt="JianGuanTHU"/><br /><sub><b>JianGuanTHU</b></sub></a><br />
+        <a href="https://github.com/JianGuanTHU"><img src="https://avatars.githubusercontent.com/u/44895708?v=4" width="100px;" alt="JianGuanTHU"/><br /><sub><b>JianGuanTHU</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/Chi-hong22"><img src="https://avatars.githubusercontent.com/u/75403952?v=4" width="100px;" alt="Chi-hong22"/><br /><sub><b>Chi-hong22</b></sub></a><br />
+        <a href="https://github.com/Chi-hong22"><img src="https://avatars.githubusercontent.com/u/75403952?v=4" width="100px;" alt="Chi-hong22"/><br /><sub><b>Chi-hong22</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/chaozg"><img src="https://avatars.githubusercontent.com/u/69794131?v=4" width="100px;" alt="chaozg"/><br /><sub><b>chaozg</b></sub></a><br />
+        <a href="https://github.com/chaozg"><img src="https://avatars.githubusercontent.com/u/69794131?v=4" width="100px;" alt="chaozg"/><br /><sub><b>chaozg</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/quantum-ctrl"><img src="https://avatars.githubusercontent.com/u/16505311?v=4" width="100px;" alt="quantum-ctrl"/><br /><sub><b>quantum-ctrl</b></sub></a><br />
+        <a href="https://github.com/quantum-ctrl"><img src="https://avatars.githubusercontent.com/u/16505311?v=4" width="100px;" alt="quantum-ctrl"/><br /><sub><b>quantum-ctrl</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/Zhao2z"><img src="https://avatars.githubusercontent.com/u/141019403?v=4" width="100px;" alt="Zhao2z"/><br /><sub><b>Zhao2z</b></sub></a><br />
+        <a href="https://github.com/Zhao2z"><img src="https://avatars.githubusercontent.com/u/141019403?v=4" width="100px;" alt="Zhao2z"/><br /><sub><b>Zhao2z</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/eclipse0922"><img src="https://avatars.githubusercontent.com/u/6214316?v=4" width="100px;" alt="eclipse0922"/><br /><sub><b>eclipse0922</b></sub></a><br />
+        <a href="https://github.com/eclipse0922"><img src="https://avatars.githubusercontent.com/u/6214316?v=4" width="100px;" alt="eclipse0922"/><br /><sub><b>eclipse0922</b></sub></a>
       </td>
     </tr>
-
-
-  </tbody>
-  <tbody>
-   <tr>
+    <tr>
       <td align="center" valign="top">
-        <a href="https://github.com/xuemian168"><img src="https://avatars.githubusercontent.com/u/38741078?v=4" width="100px;" alt="xuemian168"/><br /><sub><b>xuemian168</b></sub></a><br />
+        <a href="https://github.com/xuemian168"><img src="https://avatars.githubusercontent.com/u/38741078?v=4" width="100px;" alt="xuemian168"/><br /><sub><b>xuemian168</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/Lrrrr549"><img src="https://avatars.githubusercontent.com/u/71866027?v=4" width="100px;" alt="Lrrrr549"/><br /><sub><b>Lrrrr549</b></sub></a><br />
+        <a href="https://github.com/Lrrrr549"><img src="https://avatars.githubusercontent.com/u/71866027?v=4" width="100px;" alt="Lrrrr549"/><br /><sub><b>Lrrrr549</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/AinzRimuru"><img src="https://avatars.githubusercontent.com/u/59441476?v=4" width="100px;" alt="AinzRimuru"/><br /><sub><b>AinzRimuru</b></sub></a><br />
+        <a href="https://github.com/AinzRimuru"><img src="https://avatars.githubusercontent.com/u/59441476?v=4" width="100px;" alt="AinzRimuru"/><br /><sub><b>AinzRimuru</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/fengxueguiren"><img src="https://avatars.githubusercontent.com/u/153522370?v=4" width="100px;" alt="fengxueguiren"/><br /><sub><b>fengxueguiren</b></sub></a><br />
+        <a href="https://github.com/fengxueguiren"><img src="https://avatars.githubusercontent.com/u/153522370?v=4" width="100px;" alt="fengxueguiren"/><br /><sub><b>fengxueguiren</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://github.com/zerocpp"><img src="https://avatars.githubusercontent.com/u/2630297?v=4" width="100px;" alt="fengxueguiren"/><br /><sub><b>zerocpp</b></sub></a><br />
+        <a href="https://github.com/zerocpp"><img src="https://avatars.githubusercontent.com/u/2630297?v=4" width="100px;" alt="zerocpp"/><br /><sub><b>zerocpp</b></sub></a>
       </td>
-   </tr>
+    </tr>
   </tbody>
 </table>
 
-# Acknowledgement
-We sincerely thank the following individuals and organizations for their promotion and support!!!
+---
+
+## Acknowledgement
+
+感谢原项目作者及以下推广者的支持：
+
 <table>
   <tbody>
     <tr>
       <td align="center" valign="top">
-        <a href="https://x.com/GitHub_Daily/status/1930610556731318781"><img src="https://pbs.twimg.com/profile_images/1660876795347111937/EIo6fIr4_400x400.jpg" width="100px;" alt="Github_Daily"/><br /><sub><b>Github_Daily</b></sub></a><br />
+        <a href="https://x.com/GitHub_Daily/status/1930610556731318781"><img src="https://pbs.twimg.com/profile_images/1660876795347111937/EIo6fIr4_400x400.jpg" width="100px;" alt="Github_Daily"/><br /><sub><b>Github_Daily</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://x.com/aigclink/status/1930897858963853746"><img src="https://pbs.twimg.com/profile_images/1729450995850027008/gllXr6bh_400x400.jpg" width="100px;" alt="AIGCLINK"/><br /><sub><b>AIGCLINK</b></sub></a><br />
+        <a href="https://x.com/aigclink/status/1930897858963853746"><img src="https://pbs.twimg.com/profile_images/1729450995850027008/gllXr6bh_400x400.jpg" width="100px;" alt="AIGCLINK"/><br /><sub><b>AIGCLINK</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://www.ruanyifeng.com/blog/2025/06/weekly-issue-353.html"><img src="https://avatars.githubusercontent.com/u/905434" width="100px;" alt="阮一峰的网络日志"/><br /><sub><b>阮一峰的网络日志 <br> 科技爱好者周刊 <br> （第 353 期）</b></sub></a><br />
+        <a href="https://www.ruanyifeng.com/blog/2025/06/weekly-issue-353.html"><img src="https://avatars.githubusercontent.com/u/905434" width="100px;" alt="阮一峰的网络日志"/><br /><sub><b>阮一峰的网络日志</b></sub></a>
       </td>
       <td align="center" valign="top">
-        <a href="https://hellogithub.com/periodical/volume/111"><img src="https://github.com/user-attachments/assets/eff6b6dd-0323-40c4-9db6-444a51bbc80a" width="100px;" alt="《HelloGitHub》第 111 期"/><br /><sub><b>《HelloGitHub》<br> 月刊第 111 期</b></sub></a><br />
+        <a href="https://hellogithub.com/periodical/volume/111"><img src="https://github.com/user-attachments/assets/eff6b6dd-0323-40c4-9db6-444a51bbc80a" width="100px;" alt="HelloGitHub"/><br /><sub><b>《HelloGitHub》第 111 期</b></sub></a>
       </td>
     </tr>
   </tbody>
 </table>
-
-
-# Star history
-
-[![Stargazers over time](https://starchart.cc/dw-dengwei/daily-arXiv-ai-enhanced.svg?variant=adaptive)](https://starchart.cc/dw-dengwei/daily-arXiv-ai-enhanced)
-
-# Buy me a coffee
-[here](./buy-me-a-coffee/README.md)
