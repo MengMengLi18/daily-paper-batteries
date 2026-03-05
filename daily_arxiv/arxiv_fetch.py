@@ -4,7 +4,7 @@ daily_arxiv/arxiv_fetch.py  —  main branch 版本
   1. 电池仿真 / 电池建模
   2. World Model / Diffusion Model
 """
-
+from numpy import unique
 import os, sys, json, time, argparse
 import urllib.request, urllib.parse
 import xml.etree.ElementTree as ET
