@@ -222,15 +222,11 @@ def main():
                 file=sys.stderr)
                 
     print(f" 共 {len(unique)} 篇（去重后）", file=sys.stderr)
-    # all_journals = {r["journal"] for r in unique}
-    # print(f"📋 本次抓到的所有期刊:", file=sys.stderr)
-    # for j in sorted(all_journals):
-    #     print(f"   '{j}'", file=sys.stderr)
 
     # 提前检查，不写空文件
     if not unique:
         print("ℹ  今日无新论文", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(0)
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     with open(args.output, "w", encoding="utf-8") as f:
